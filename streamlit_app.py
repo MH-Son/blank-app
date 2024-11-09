@@ -1,35 +1,30 @@
+import pandas as pd
 import streamlit as st
+import matplotlib.pyplot as plt
 
-st.title("poc 앱 test page")
-st.markdown("""
-# 창업가로서의 목표와 전략
+# Load the data
+file_path = 'movies_2024.csv'
+df = pd.read_csv(file_path)
 
-![프로필 이미지](https://via.placeholder.com/150)
+# Streamlit app
+st.title('Budget vs Revenue Relationship')
 
-저는 **창업**을 통해 사회적 문제를 해결하고 지속 가능한 변화를 만들고자 하는 예비 창업가입니다. 시장의 요구를 분석하고 창의적인 솔루션을 설계하여 사용자 경험을 개선하는 데 중점을 두고 있습니다. 글로벌 시장에 대한 이해와 네트워크 구축을 통해 창업 기회를 모색하고 있습니다.
+# Show data preview
+st.subheader('Dataset Preview')
+st.dataframe(df.head())
 
-### 목표와 핵심 가치
+# Check if required columns are present
+if 'budget' in df.columns and 'revenue' in df.columns:
+    # Drop rows with missing values in budget or revenue
+    df_filtered = df.dropna(subset=['budget', 'revenue'])
 
-- **창의적 문제 해결**: 기존의 틀을 벗어난 사고로 혁신적인 아이디어를 발굴하고 이를 현실화합니다. 다양한 사례를 결합해 문제를 분석하고 해결하며, 사용자와 소통하여 그들의 니즈를 이해하고자 합니다.
-- **도전과 실패 수용**: 실패를 학습의 기회로 삼아 지속적으로 개선합니다. 도전 정신을 바탕으로 복잡한 상황에서도 최적의 결정을 내릴 수 있도록 노력하고 있습니다.
-- **사용자 중심 접근**: 사용자의 요구를 명확히 파악하고, 사용자 피드백을 반영하여 지속적으로 서비스를 개선합니다. 사용자 인터뷰와 사용성 테스트를 통해 더 나은 경험을 제공하고자 합니다.
-
-### 기술 역량 및 경험
-
-| 기술          | 숙련도   | 경험 연도  |
-| ------------- | -------- | ---------- |
-| 서비스 기획    | 고급     | 3년        |
-| UX/UI 디자인   | 중급     | 2년        |
-| 데이터 분석    | 초급     | 1년        |
-
-**서비스 기획**과 **UX/UI 디자인**에 강점을 가지고 있으며, 사용자 요구를 반영한 솔루션 도출에 주력하고 있습니다. 데이터 분석을 통해 사용자 행동을 이해하고, 이를 바탕으로 더 나은 사용자 경험을 제공합니다.
-
-### 관심 분야
-
-- **스타트업 및 초기 단계 비즈니스**: 초기 스타트업에서 혁신적인 영향을 미치고 빠르게 변화하는 환경에서 문제를 해결하고자 합니다.
-- **사회적 영향력 창출**: 지속 가능한 사회적 가치를 창출하며, 환경 보호, 교육 격차 해소 등 사회적 문제를 해결하는 데 기여하고 싶습니다.
-- **디지털 제품 개발**: 기술을 활용한 디지털 제품으로 사용자에게 가치 있는 경험을 제공하고, 인공지능(AI)과 머신러닝(ML)을 통한 맞춤형 경험을 제공하는 데 관심이 있습니다.
-
-저는 꿈을 현실로 만들어가는 과정에서 많은 사람들과 협력하고, 함께 성장하며 긍정적인 변화를 이루고자 합니다. 도전과 변화를 두려워하지 않는 창업가로서의 길을 걸어가겠습니다.
-
-            """)
+    # Plotting budget vs revenue
+    st.subheader('Budget vs Revenue Scatter Plot')
+    fig, ax = plt.subplots()
+    ax.scatter(df_filtered['budget'], df_filtered['revenue'], alpha=0.5)
+    ax.set_xlabel('Budget')
+    ax.set_ylabel('Revenue')
+    ax.set_title('Budget vs Revenue')
+    st.pyplot(fig)
+else:
+    st.error('The dataset does not contain required columns: "budget" and "revenue"')
